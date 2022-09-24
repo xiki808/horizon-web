@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Cache;
-
 class MovieService
 {
     private $httpClient;
@@ -18,38 +16,13 @@ class MovieService
         ];
     }
 
-    public function getMoviesByVoteOrder($page)
+    public function getMoviesTopRated($page)
     {
-        $cachedMoviePage = Cache::get("movie_list_$page");
-      
-        if (isset($cachedMoviePage)) {
-            $results = json_decode($cachedMoviePage, false);
-        } else {
-            $request = $this->httpClient->request('GET', "movie/top_rated?page=$page", ['headers' => $this->auth]);
+        $request = $this->httpClient->request('GET', "movie/top_rated?page=$page", ['headers' => $this->auth]);
   
-            $response = json_decode($request->getBody()->getContents());
+        $response = json_decode($request->getBody()->getContents());
 
-            $results = $response->results;
-
-            Cache::put("movie_list_$page", json_encode($results), env('REDIS_EXPIRE'));
-        }
-
-        return $results;
-    }
-
-    public function getMovieById($id)
-    {
-        $cachedMovie = Cache::get("movie_$id");
-        
-        if ($cachedMovie) {
-            $results = json_decode($cachedMovie, false);
-        } else {
-            $request = $this->httpClient->request('GET', "movie/$id", ['headers' => $this->auth]);
-  
-            $results = json_decode($request->getBody()->getContents());
-
-            Cache::put("movie_$id", json_encode($results), env('REDIS_EXPIRE'));
-        }
+        $results = $response->results;
 
         return $results;
     }

@@ -4,6 +4,7 @@ import { Link } from '@inertiajs/inertia-vue3';
 defineProps([
     'movies',
     'page',
+    'isLoggedIn',
 ])
 </script>
   
@@ -25,7 +26,7 @@ defineProps([
         </tr>
       </thead>
       <tbody>
-        <tr v-for="movie in movies">
+        <tr v-for="movie in movies.data" :key="movie.id">
           <td class="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
             <Link :href="route('home-show', {id: movie.id})" class="text-sm text-gray-700 dark:text-gray-500 underline">
             {{movie.title}}
@@ -35,6 +36,12 @@ defineProps([
             {{movie.release_date}}</td>
           <td class="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
             {{movie.vote_average}}</td>
+          <td v-if="isLoggedIn"
+            class="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+            <Link :href="route('movie-favourite')" method="post" as="button" :data="{ movie: movie.id }"
+              class="text-sm text-gray-700 dark:text-gray-500 underline">Save
+            </Link>
+          </td>
         </tr>
       </tbody>
     </table>

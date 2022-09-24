@@ -2,30 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\MovieService;
+use App\Models\Movie;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 
 class HomeController extends Controller
 {
-    public function index(MovieService $movieService, $page = 1)
+    public function index(Request $request)
     {
-        $movies = $movieService->getMoviesByVoteOrder($page);
+        $page = $request->has('page') ? $request->get('page') : 1;
+
+        $cachedMoviePage = Cache::get("movie_page_$page");
+
+        if (isset($cachedMoviePage)) {
+            $movies = json_decode($cachedMoviePage, false);
+        } else {
+            $movies = Movie::paginate(20);
+
+            Cache::put("movie_page_$page", json_encode($movies), env('REDIS_EXPIRE'));
+        }
         
         return Inertia::render('Home/Index', [
             'movies' => $movies,
-            'page' => intval($page),
+            'page' => intval($request->get('page')),
             'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register')
+            'canRegister' => Route::has('register'),
+            'isLoggedIn' => Auth::check()
         ]);
     }
 
-    public function show(MovieService $movieService, $id)
+    public function show($id)
     {
-        $movie = $movieService->getMovieById($id);
-        
         return Inertia::render('Home/Show', [
-            'movie' => $movie,
+            'movie' => Movie::find($id),
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register')
         ]);
