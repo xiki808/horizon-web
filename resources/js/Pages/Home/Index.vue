@@ -5,6 +5,7 @@ import MovieListLayout from '@/Layouts/Movies/MovieListLayout.vue';
 defineProps({
     movies: Object,
     page: Number,
+    filtered: Boolean,
     canLogin: Boolean,
     canRegister: Boolean,
     isLoggedIn: Boolean,
@@ -14,6 +15,7 @@ defineProps({
 
 <template>
     <HomeLayout :canLogin="canLogin" :canRegister="canRegister">
-        <MovieListLayout :movies="movies" :page="page" :isLoggedIn="isLoggedIn" :userMovies="userMovies" />
+        <MovieListLayout :movies="movies" :page="page" :filtered="filtered" :isLoggedIn="isLoggedIn"
+            :userMovies="userMovies" />
     </HomeLayout>
 </template>

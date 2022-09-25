@@ -4,6 +4,7 @@ import { Link } from '@inertiajs/inertia-vue3';
 defineProps([
     'movies',
     'page',
+    'filtered',
     'isLoggedIn',
     'userMovies',
 ])
@@ -11,6 +12,16 @@ defineProps([
   
 <template>
   <div class="flex flex-col justify-center w-1/2 my-8">
+    <div class="prev border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400 text-center">
+      <Link v-if="!filtered" :href="route('home')" method="post" as="div"
+        class="text-sm text-gray-700 dark:text-gray-500 underline cursor-pointer">
+      Filter This year's movies
+      </Link>
+      <Link v-if="filtered" :href="route('home')"
+        class="text-sm text-gray-700 dark:text-gray-500 underline w-8 cursor-pointer">
+      Back
+      </Link>
+    </div>
     <table
       class="border-separate border-spacing-2 border border-slate-400 dark:border-slate-500 bg-white dark:bg-slate-800 text-sm shadow-sm my-8">
       <thead class="bg-slate-50 dark:bg-slate-700">
