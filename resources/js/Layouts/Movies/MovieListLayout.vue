@@ -39,8 +39,10 @@ defineProps([
             {{movie.vote_average}}</td>
           <td v-if="isLoggedIn"
             class="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-            <Link :href="route('movie-favourite')" method="post" as="div" :data="{ movie: movie.id }"
-              class="text-sm text-gray-700 dark:text-gray-500 underline w-8 cursor-pointer">
+            <Link :href="!userMovies.includes(movie.id) ? route('movie-favourite') : '#'"
+              :method="!userMovies.includes(movie.id) ? 'post' : 'get'" as="div" :data="{ movie: movie.id }"
+              class="text-sm text-gray-700 dark:text-gray-500 underline w-8"
+              :class="!userMovies.includes(movie.id) ? 'cursor-pointer' : ''">
             <img v-if="userMovies.includes(movie.id)" src="/images/red-heart.png" />
             <img v-else src="/images/empty-heart.png" />
             </Link>
@@ -51,7 +53,7 @@ defineProps([
     <div class="flex">
       <div
         class="prev border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400 w-1/2 text-center">
-        <Link v-if="page != 1" :href="route('home', {page: page - 1})"
+        <Link v-if="page != 0 && page != 1" :href="route('home', {page: page - 1})"
           class="text-sm text-gray-700 dark:text-gray-500 underline">Prev</Link>
       </div>
       <div
