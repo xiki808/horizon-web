@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movie;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -24,13 +25,15 @@ class HomeController extends Controller
 
             Cache::put("movie_page_$page", json_encode($movies), env('REDIS_EXPIRE'));
         }
+
         
         return Inertia::render('Home/Index', [
             'movies' => $movies,
             'page' => intval($request->get('page')),
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
-            'isLoggedIn' => Auth::check()
+            'isLoggedIn' => Auth::check(),
+            'userMovies' => Auth::check() ? User::find(Auth::id())->movieIDs()->toArray() : []
         ]);
     }
 

@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -13,11 +12,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_movie', function (Blueprint $table) {
+        Schema::create('movie_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->index()->constrained()->cascadeOnDelete();
-            $table->integer('movie_id')->index()->constrained()->cascadeOnDelete();
-            $table->timestamps();
+            $table->integer('movie_id')->unsigned();
+            $table->integer('user_id')->unsigned();
         });
     }
 
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_movie');
+        Schema::dropIfExists('movie_user');
     }
 };

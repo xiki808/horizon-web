@@ -7,12 +7,13 @@ defineProps({
     page: Number,
     canLogin: Boolean,
     canRegister: Boolean,
-    isLoggedIn: Boolean
+    isLoggedIn: Boolean,
+    userMovies: Array
 })
 </script>
 
 <template>
     <HomeLayout :canLogin="canLogin" :canRegister="canRegister">
-        <MovieListLayout :movies="movies" :page="page" :isLoggedIn="isLoggedIn" />
+        <MovieListLayout :movies="movies" :page="page" :isLoggedIn="isLoggedIn" :userMovies="userMovies" />
     </HomeLayout>
 </template>

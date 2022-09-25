@@ -46,4 +46,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Movie::class);
     }
+
+    public function movieIDs()
+    {
+        return $this->belongsToMany(Movie::class)->withPivot('movies.id')->pluck('movies.id');
+    }
+
+    public function movieFavourites()
+    {
+        return $this->belongsToMany(Movie::class)->withPivot('movies.id')->select('movies.id', 'movies.title', 'movies.release_date', 'movies.vote_average')->get();
+    }
 }

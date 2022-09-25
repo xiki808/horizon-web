@@ -5,6 +5,7 @@ defineProps([
     'movies',
     'page',
     'isLoggedIn',
+    'userMovies',
 ])
 </script>
   
@@ -38,8 +39,10 @@ defineProps([
             {{movie.vote_average}}</td>
           <td v-if="isLoggedIn"
             class="border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-            <Link :href="route('movie-favourite')" method="post" as="button" :data="{ movie: movie.id }"
-              class="text-sm text-gray-700 dark:text-gray-500 underline">Save
+            <Link :href="route('movie-favourite')" method="post" as="div" :data="{ movie: movie.id }"
+              class="text-sm text-gray-700 dark:text-gray-500 underline w-8 cursor-pointer">
+            <img v-if="userMovies.includes(movie.id)" src="/images/red-heart.png" />
+            <img v-else src="/images/empty-heart.png" />
             </Link>
           </td>
         </tr>
@@ -53,7 +56,7 @@ defineProps([
       </div>
       <div
         class="next border border-slate-300 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400 w-1/2 text-center">
-        <Link v-if="page != 5" :href="route('home', {page: page + 1})"
+        <Link v-if="page != 5" :href="route('home', {page: page == 0 ? 2 : page + 1})"
           class="text-sm text-gray-700 dark:text-gray-500 underline">Next</Link>
       </div>
     </div>
